@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
-import { account, ID } from "./appwrite";
+import { data } from "./data";
+import { useRouter } from "next/router";
 export const StoreContext = createContext({
   user: null,
   loading: null,
@@ -7,26 +8,28 @@ export const StoreContext = createContext({
   register: () => {},
   logout: () => {},
 });
-
 export const StoreProvider = (props) => {
+  const router = useRouter();
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const login = async (email, password) => {
-    const session = await account.createEmailSession(email, password);
-    console.log(session);
-    setLoggedInUser(await account.get());
+    const user = data.users.find((user, id) => user.mail === email);
+    if (user) {
+      if (user.pwd === password) {
+        console.log("sucess");
+      } else {
+        console.log("failed");
+      }
+      router.push(`/${user.id}/dash`);
+    } else {
+      console.log("not found");
+    }
   };
 
-  const register = async (email, password, name) => {
-    await account.create(ID.unique(), email, password, name);
-    login(email, password);
-  };
+  const register = async (email, password, name) => {};
 
-  const logout = async () => {
-    await account.deleteSession("current");
-    setLoggedInUser(null);
-  };
+  const logout = async () => {};
 
   const context = {
     user: loggedInUser,
