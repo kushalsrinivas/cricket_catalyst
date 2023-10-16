@@ -1,9 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+interface User {
+  name: string;
+  info: {
+    type: string;
+    subType: string;
+  };
+}
+
 interface DashboardProps {
-  user: Object;
+  user: User;
 }
 
 const Dashboard: React.FC<DashboardProps> = (props) => {
